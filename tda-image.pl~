@@ -27,12 +27,6 @@ imageIsHexmap(Imagen):-
     obtenerPixel(Imagen,Hexmap),
     pixhex(_,_,_,_,_,_,Hexmap).
 
-imageIsCompressed(Imagen):-
-    image(Ancho,Alto,Pixeles,Imagen),
-    length(Pixeles,CantidadPixeles),
-    Var is Ancho*Alto, Var = CantidadPixeles.
-
-
 
 
 
