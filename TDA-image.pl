@@ -32,6 +32,10 @@ imageIsCompressed(Imagen):-
     length(Pixeles,CantidadPixeles),
     Var is Ancho*Alto, not(Var = CantidadPixeles).
 
+girar([],Salida,Salida).
+girar([X|Xs],Aux,Salida):-
+    girar(Xs,[X|Aux],Salida).
+
 imageFlipH(Imagen,Imagen2):-
     flipH(Imagen,[],Imagen2)
 
