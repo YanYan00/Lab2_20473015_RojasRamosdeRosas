@@ -8,8 +8,8 @@ pixhex(X,Y,Hex,Depth,[X,Y,Hex,Depth]):-
     number(X),number(Y),string(Hex),number(Depth),X>=0,Y>=0,Depth>=0.
 
 
-image(Ancho,Alto,Pixeles,[Ancho,Alto,Pixeles]):-
-    number(Ancho),number(Alto),Ancho>=0,Alto>=0.
+image(Ancho,Alto,Pixeles,[Ancho,Alto,PixelesOrdenados]):-
+    number(Ancho),number(Alto),Ancho>=0,Alto>=0,sort(Pixeles,PixelesOrdenados).
 
 obtenerPixel(Imagen,Return):-
     image(_,_,PrimerPixel,Imagen),
@@ -25,7 +25,20 @@ imageIsPixmap(Imagen):-
 
 imageIsHexmap(Imagen):-
     obtenerPixel(Imagen,Hexmap),
-    pixhex(_,_,_,_,_,_,Hexmap).
+    pixhex(_,_,_,_,Hexmap).
+
+imageIsCompressed(Imagen):-
+    image(Ancho,Alto,Pixeles,Imagen),
+    length(Pixeles,CantidadPixeles),
+    Var is Ancho*Alto, not(Var = CantidadPixeles).
+
+%imageFlipH(Imagen,Imagen2).
+
+
+
+
+
+
 
 
 
