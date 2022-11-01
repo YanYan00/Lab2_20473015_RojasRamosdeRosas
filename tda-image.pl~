@@ -32,7 +32,8 @@ imageIsCompressed(Imagen):-
     length(Pixeles,CantidadPixeles),
     Var is Ancho*Alto, not(Var = CantidadPixeles).
 
-%imageFlipH(Imagen,Imagen2).
+imageFlipH(Imagen,Imagen2):-
+    flipH(Imagen,[],Imagen2)
 
 
 
