@@ -31,13 +31,28 @@ imageIsCompressed(Imagen):-
     image(Ancho,Alto,Pixeles,Imagen),
     length(Pixeles,CantidadPixeles),
     Var is Ancho*Alto, not(Var = CantidadPixeles).
+%-----------------------------------FlipH-----------------------------------------------
+pegarLista([],Salida,Salida).
+pegarLista([X|Xs],Aux,Salida):-
+    pegarLista(Xs,[X|Aux],Salida).
 
-girar([],Salida,Salida).
-girar([X|Xs],Aux,Salida):-
-    girar(Xs,[X|Aux],Salida).
+agrupar([],Aux,_,_,Lista,Salida):-
+    pegarLista(Aux,Lista,Ultima),reverse(Ultima,Salida).
+
+agrupar(List,Aux,Ancho,Cont,Lista,Salida):-
+    Cont=Ancho,
+    pegarLista(Aux,Lista,Girada),
+    agrupar(List,[],Ancho,0,Girada,Salida).
+
+agrupar([X|Xs],Aux,Ancho,Cont,Lista,Salida):-
+    Cont<Ancho,Cont1 is Cont+1,
+    agrupar(Xs,[X|Aux],Ancho,Cont1,Lista,Salida).
+
+
 
 imageFlipH(Imagen,Imagen2):-
-    flipH(Imagen,[],Imagen2)
+    Imagen = [Ancho,_,Pixeles],
+    agrupar(Pixeles,[],Ancho,0,[],Imagen2).
 
 
 
@@ -47,9 +62,5 @@ imageFlipH(Imagen,Imagen2):-
 
 
 
-
-%constructor:pixbit(X,Y,Bit,Depth,[X,Y,Bit,Depth])
-%pertenencia:pixbit(_,_,_,_,[X,Y,Bit,Depth])True o False
-%selector de coord X:pixbit(X1,_,_,_,[X,Y,Bit,Depth])
 
 
