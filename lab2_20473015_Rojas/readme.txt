@@ -1,0 +1,1 @@
+compilar tda image, ingresando en las consultas que estan en los comentarios de pruebas, en el archivo pruebas.pl usando swi-prolog version 8.4 o superior.

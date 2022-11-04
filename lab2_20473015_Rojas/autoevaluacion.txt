@@ -1,0 +1,19 @@
+Requerimientos Funcionales	   Evaluación
+TDAs					1
+Constructor				1	
+imageIsBitmap				1
+imageIsPixmap				1
+imageIsHexmap				1
+imageIsCompressed			1	
+imageFlipH				0.75
+imageFlipV				0
+imageCrop				0
+imageRGBToHex				0
+imageToHistogram			0
+imageRotate90				0	
+imageCompress				0
+imageChangePixel			0
+imageInvertColorRGB			0
+imageToString				0
+imageDepthLayers			0
+imageDecompress				0
