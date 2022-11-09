@@ -94,11 +94,12 @@ Dom:Imagen(lista) x Imagen2(lista)
 Recorrido: imagen
 imageFlipH(I,I2)
 */
-imageFlipH(Imagen,[Ancho,Alto,PixelesOrdenados]):-
+imageFlipH(Imagen,Imagen2):-
     Imagen = [Ancho,Alto,Pixeles],
     Pixeles = [X|_],
     agrupar(Pixeles,[],Ancho,0,[],PixelesGirados),
-    length(X,Largo),arreglarCoordenadas(PixelesGirados,Ancho,0,0,[],Largo,PixelesOrdenados).
+    length(X,Largo),arreglarCoordenadas(PixelesGirados,Ancho,0,0,[],Largo,PixelesOrdenados),
+    Imagen2 is [Ancho,Alto,PixelesOrdenados].
 
 
 
