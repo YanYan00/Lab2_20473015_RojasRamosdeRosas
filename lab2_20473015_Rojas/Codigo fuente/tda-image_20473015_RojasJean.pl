@@ -466,3 +466,135 @@ imageRotate90(Imagen,[Alto,Ancho,Datos]):-
     (imageIsBitmap(Imagen) ->  cambiarCoord(Pixeles,Ancho,[],Pix),reverse(Pix,Pix2),cambiarX(Pix2,Ancho,0,0,[],Pix3),sort(Pix3,Datos);
      imageIsHexmap(Imagen) ->  cambiarCoord(Pixeles,Ancho,[],Pix),reverse(Pix,Pix2),cambiarX(Pix2,Ancho,0,0,[],Pix3),sort(Pix3,Datos);
      imageIsPixmap(Imagen) ->  cambiarCoordRGB(Pixeles,Ancho,[],Pix),reverse(Pix,Pix2),cambiarXRGB(Pix2,Ancho,0,0,[],Pix3),sort(Pix3,Datos)).
+% --------------------imagenInvertColorRGB--------------------------------
+/*
+Meta: cambia el color de los pixeles por el valor absoluto de la resta
+de estos con 155
+Variables
+P=pixeles
+L=Lista de pixeles nuevos
+P2=pixeles de Salida
+invertir(P,L,P2)
+*/
+invertir([],Lista,Salida):-
+    reverse(Lista,Salida).
+invertir([H|Xs],Lista,Salida):-
+    H=[X,Y,R,G,B,Depth],abs(R-255,R1),abs(G-255,G1),abs(B-255,B1),
+    invertir(Xs,[[X,Y,R1,G1,B1,Depth]|Lista],Salida).
+/*
+Meta: Hace un llamado a invertir para cambiar los datos de los pixeles y
+devolver una nueva imagen
+Variables
+I=imagen
+I2=imagen nueva
+imagenInvertColorRGB(I,I2)
+*/
+imagenInvertColorRGB([Ancho,Alto,Pixeles],[Ancho,Alto,Cambiados]):-
+    invertir(Pixeles,[],Cambiados).
+% ------------------------------imageChangePixel--------------------------
+/*
+Meta: Cuando el pixel buscado sea igual que la cabeza de la lista esta
+cambia sus datos al pixel ingresado
+Variables
+P=pixeles
+Pb=pixel buscado
+L=Lista de pixeles nuevos
+P2=pixeles de Salida
+buscar(P,Pb,L,P2)
+*/
+buscar([],_,Lista,Salida):-
+    reverse(Lista,Salida).
+buscar([H|Xs],Pixel,Lista,Salida):-
+    H=[CoordX,CoordY,_,_],Pixel = [X,Y,_,_],CoordX1 is CoordX,CoordY1 is CoordY,X1 is X,Y1 is Y,(CoordX1 = X1 ),(CoordY1 = Y1),
+    buscar(Xs,Pixel,[Pixel|Lista],Salida).
+buscar([H|Xs],Pixel,Lista,Salida):-
+    buscar(Xs,Pixel,[H|Lista],Salida).
+/*
+Meta: Cuando el pixel buscado sea igual que la cabeza de la lista esta
+cambia sus datos al pixel ingresado
+Variables
+P=pixeles
+Pb=pixel buscado
+L=Lista de pixeles nuevos
+P2=pixeles de Salida
+buscarRGB(P,Pb,L,P2)
+*/
+buscarRGB([],_,Lista,Salida):-
+    reverse(Lista,Salida).
+buscarRGB([H|Xs],Pixel,Lista,Salida):-
+    H=[CoordX,CoordY,_,_,_,_],Pixel = [X,Y,_,_,_,_],CoordX1 is CoordX,CoordY1 is CoordY,X1 is X,Y1 is Y,(CoordX1 = X1 ),(CoordY1 = Y1),
+    buscarRGB(Xs,Pixel,[Pixel|Lista],Salida).
+buscarRGB([H|Xs],Pixel,Lista,Salida):-
+    buscarRGB(Xs,Pixel,[H|Lista],Salida).
+/*
+Meta: Se hace llamada a buscar dependiendo del tipo de imagen que sea.
+Variables
+I=imagen
+Pb=pixel buscado
+I2=Se devuelve una imagen con el pixel buscado cambiado
+imageChangePixel(I,Pb,I2)
+*/
+
+imageChangePixel(Imagen,Pixel,[Ancho,Alto,Modificado]):-
+    Imagen=[Ancho,Alto,Pixeles],
+    (imageIsBitmap(Imagen) ->  buscar(Pixeles,Pixel,[],Modificado);
+     imageIsHexmap(Imagen) ->  buscar(Pixeles,Pixel,[],Modificado);
+     imageIsPixmap(Imagen) ->  buscarRGB(Pixeles,Pixel,[],Modificado)).
+% ----------------------------imageToString----------------------------------------
+/*
+Meta: Concatena los datos con colores + espacio + tabulador, al momento
+de que se alcance el ancho en contador se le concatena un salto de
+linea.
+Variables
+P=pixeles
+A=ancho de imagen
+C=contador
+Pa=palabra
+S=palabra de salida
+stringHB(P,A,C,Pa,S)
+*/
+stringHB([],_,_,Palabra,Palabra).
+stringHB([H|Xs],Ancho,Contador,Palabra,Salida):-
+    H=[_,_,Dato,Depth],Contador<Ancho,Contador1 is Contador+1,string_concat(Palabra,Dato,Palabra1),string_concat(Palabra1," ",Palabra2),string_concat(Palabra2,Depth,Palabra3),string_concat(Palabra3,"\t",PalabraSalida),
+    stringHB(Xs,Ancho,Contador1,PalabraSalida,Salida).
+stringHB(Lista,Ancho,Contador,Palabra,Salida):-
+    Contador = Ancho,string_concat(Palabra,"\n",Palabra1),
+    stringHB(Lista,Ancho,0,Palabra1,Salida).
+/*
+Meta: Concatena los datos con colores + espacio + tabulador, al momento
+de que se alcance el ancho en contador se le concatena un salto de
+linea.
+Variables
+P=pixeles
+A=ancho de imagen
+C=contador
+Pa=palabra
+S=palabra de salida
+stringRGB(P,A,C,Pa,S)
+*/
+stringRGB([],_,_,Palabra,Palabra).
+stringRGB([H|Xs],Ancho,Contador,Palabra,Salida):-
+    H=[_,_,R,G,B,Depth],Contador<Ancho,Contador1 is Contador+1,string_concat(Palabra,R,Palabra1),string_concat(Palabra1," ",Palabra2),string_concat(Palabra2,G,Palabra3),string_concat(Palabra3," ",Palabra4),string_concat(Palabra4,B,Palabra5),string_concat(Palabra5," ",Palabra6),string_concat(Palabra6,Depth,Palabra7),string_concat(Palabra7,"\t",PalabraSalida),
+    stringRGB(Xs,Ancho,Contador1,PalabraSalida,Salida).
+stringRGB(Lista,Ancho,Contador,Palabra,Salida):-
+    Contador = Ancho,string_concat(Palabra,"\n",Palabra1),
+    stringRGB(Lista,Ancho,0,Palabra1,Salida).
+/*
+Meta:Dependiendo del tipo de imagen se hace un llamado a string puesto
+que puede usar para bit o hex stringhb mientras que puede usar
+stringRGB para imagenes rgb
+Variables
+I=imagen
+Pa=palabra
+imageToString(I,Pa)
+*/
+imageToString([Ancho,_,Pixeles],Palabra):-
+    Imagen=[Ancho,_,Pixeles],
+    (imageIsBitmap(Imagen) ->  stringHB(Pixeles,Ancho,0," ",Palabra);
+     imageIsHexmap(Imagen) ->  stringHB(Pixeles,Ancho,0," ",Palabra);
+     imageIsPixmap(Imagen) ->  stringRGB(Pixeles,Ancho,0," ",Palabra)).
+
+
+
+
+
